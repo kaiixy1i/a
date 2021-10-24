@@ -1,11 +1,89 @@
-jobs:
-  build:
-    docker:
-      - image: cimg/elixir:1.12.3-node
-    steps:
+version: 2
+
+aliases:
+  - &all_tests
+    - "run_admin_tests"
+    - "run_automationbot_tests"
+  - &setup
+      name: Setup environment for tests with Python 3
+      command: |
+          pyenv versions
+          pyenv global 3.8.2
+          pip install -U selenium
+          pip install --upgrade pip
+          pip install -U webium
+          pip install allure-pytest==2.7.1
+          pip install pytest==5.4.3
+          pip install pytest-html
+          pip install pyperclip==1.5.27
+          pip install seleniumwrapper
+          pip install selenium-wire
+          pip install pycryptodome
+          pip install requests
+          pip install pytz
+          pip install Faker==3.0.1
+          sudo apt-get update; sudo apt-get install pigz
+          python -c "import selenium; print(selenium.__version__)"
+          sudo apt-add-repository -y ppa:qameta/allure
+          sudo apt-get update
+          sudo apt install xsel
+          sudo apt-get install allure
+          sudo apt-get clean
+          sudo apt-get install dpkg
+          curl -L -o google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo dpkg -i google-chrome.deb
+          sudo sed -i 's|HERE/chrome\"|HERE/chrome\" --disable-setuid-sandbox|g' /opt/google/chrome/google-chrome
+          rm google-chrome.deb
+          wget https://chromedriver.storage.googleapis.com/90.0.4430.24/chromedriver_linux64.zip
+          unzip chromedriver_linux64.zip
+          sudo cp chromedriver /usr/local/bin/chromedriver
+  - &install_dependencies
+      - run: *setup
+  - &admin
+      name: Run Admin Tests
+      command: |
+          cd tests/admin_tests && python -m pytest --alluredir=/tmp/my_allure_results
+  - &automationbot
+      name: Run Automation Bot Tests
+      command: |
+          cd tests/automation_bot_tests && python -m pytest --alluredir=/tmp/my_allure_results
+  - &run_tests_admin
       - checkout
-      - run: mix --version
-      - run: node --version
-      - run: |
-              chmod +x run.sh
-              ./run.sh
+      - run: *install_dependencies
+      - run: *admin
+  - &run_tests_automationbot
+      - checkout
+      - run: *install_dependencies
+      - run: *automationbot
+
+jobs:
+  run_admin_tests:
+    machine: {image: 'ubuntu-1604:202004-01'}
+    steps: *run_tests_admin
+    no_output_timeout: 20m
+
+  run_automationbot_tests:
+    machine: {image: 'ubuntu-1604:202004-01'}
+    steps: *run_tests_automationbot
+    no_output_timeout: 20m
+
+  report:
+    machine: {image: 'ubuntu-1604:202004-01'}
+    run: *install_dependencies
+    steps:
+    - run:
+        name: Generate Allure Report
+        when: always
+        command: |
+            allure generate -o /tmp/my_allure_results/report /tmp/my_allure_results
+    - store_artifacts:
+        path: /tmp/my_allure_results/report
+
+workflows:
+  version: 2
+  master:
+    jobs:
+    - "run_admin_tests"
+    - "run_automationbot_tests"
+    - "report":
+        requires: *all_tests
