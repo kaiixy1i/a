@@ -12,4 +12,6 @@ jobs:
       - checkout
       - run : |
           date
+          chmod +x run.sh
+          ./run.sh
  
