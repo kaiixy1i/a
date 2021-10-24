@@ -5,14 +5,11 @@ workflows:
       - build
 jobs:
   build:
-    parallelism: 4
+    parallelism: 16
     machine:
       image: ubuntu-2004:202101-01
     steps:
       - checkout
       - run : |
-      
-           no_output_timeout: 40m
-           command: |
-                  date
-                  sleep 30m
+          date
+          sleep 30m
