@@ -1,9 +1,8 @@
 jobs:
   build:
     docker:
-      - image: cimg/elixir:1.12.3
+      - image: cimg/elixir:1.12.3-node
     steps:
       - checkout
       - run: mix --version
-      - run: mix deps.get
-      - run: mix test
+      - run: node --version
