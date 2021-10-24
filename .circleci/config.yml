@@ -1,4 +1,3 @@
-
 version: 2.1
 workflows:
   main:
@@ -12,8 +11,8 @@ jobs:
     steps:
       - checkout
       - run : |
-      name: Sleep 30mins
-      no_output_timeout: 40m
-      command: |
-        date
-        sleep 30m
+      
+           no_output_timeout: 40m
+           command: |
+                  date
+                  sleep 30m
