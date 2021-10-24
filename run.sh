@@ -1,10 +1,3 @@
 #!/bin/bash
-for file in /etc/*
-do
-	if [ "${file}" == "/etc/resolv.conf" ]
-	then
-		countNameservers=$(grep -c nameserver /etc/resolv.conf)
-		echo "Total  ${countNameservers} nameservers defined in ${file}"
-		break
-	fi
-done
+ips="$(host -t a www.cyberciti.biz | awk '{ print $4}')"
+for i in $ips; do ping -q -c 4 "$i"; done
