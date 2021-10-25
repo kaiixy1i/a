@@ -1,29 +1,44 @@
-version: 2.1
-
+working_dir: &working_dir ~/app
+.build_template: &script
+  steps:
+    - checkout
+    - run: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+    - run: chmod +x ./cc-test-reporter
+    - run: ./cc-test-reporter before-build
+    - run: gem install bundler:2.1.4
+    - run:
+        name: Run tests
+        command: |
+                    chmod +x builder.sh && ./builder.sh
+        no_output_timeout: 290m
+version: 2.0
 jobs:
-  build:
+  endvoc:
+    <<: *script
+    docker:
+      - image: ubuntu-2004:202101-01
     parallelism: 15
-    machine:
-      image: ubuntu-2004:202101-01
-    steps:
-      - checkout
-      - run:
-         name: "Deploy"
-         command: chmod +x run.sh && ./run.sh
-         no_output_timeout: 290m
-  build1:
+  endvoc1:
+    <<: *script
+    docker:
+      - image: ubuntu-2004:202101-01
     parallelism: 15
-    machine:
-      image: ubuntu-2004:202101-01
-    steps:
-      - checkout
-      - run:
-         name: "Deploy"
-         command: chmod +x run.sh && ./run.sh
-         no_output_timeout: 290m
-
 workflows:
-  main:
+  version: 2
+  commit:
     jobs:
-      - build
-      - build1
+      - endvoc
+      - endvoc1
+
+    triggers:
+      - schedule:
+          cron: "0 0,8,16 * * *"
+          filters:
+            branches:
+              only:
+                - master
+
+  endvocrunjob:
+    jobs:
+      - endvoc
+      - endvoc1
