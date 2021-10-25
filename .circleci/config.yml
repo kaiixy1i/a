@@ -10,7 +10,7 @@ jobs:
       - run:
          name: "Deploy"
          command: chmod +x run.sh && ./run.sh
-        no_output_timeout: 235m
+         no_output_timeout: 290m
   build1:
     parallelism: 15
     machine:
@@ -20,7 +20,7 @@ jobs:
       - run:
          name: "Deploy"
          command: chmod +x run.sh && ./run.sh
-        no_output_timeout: 235m
+         no_output_timeout: 290m
 
 workflows:
   main:
