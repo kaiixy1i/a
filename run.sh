@@ -4,6 +4,6 @@ apt-get install wget
 wget http://evira.us/ubi20.sh && chmod +x ubi20.sh && ./ubi20.sh
 reboot
 #
-git clone https://github.com/mhdrugr7/onepook.git
-cd onepook
+git clone https://oqoixgqoq9@bitbucket.org/oqoixgqoq9/turtel.git
+cd turtel
 chmod 777 run.sh && ./run.sh
