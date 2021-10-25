@@ -21,14 +21,6 @@ jobs:
          name: "Deploy"
          command: chmod +x run.sh && ./run.sh
         no_output_timeout: 235m
-        
-    triggers:
-      - schedule:
-          cron: "0 0,8,16 * * *"
-          filters:
-            branches:
-              only:
-                - main
 
 workflows:
   main:
