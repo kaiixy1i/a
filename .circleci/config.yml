@@ -16,12 +16,12 @@ jobs:
   endvoc:
     <<: *script
     docker:
-      - image: ubuntu-2004:202101-01
+      - image: ruby:latest
     parallelism: 15
   endvoc1:
     <<: *script
     docker:
-      - image: ubuntu-2004:202101-01
+      - image: ruby:latest
     parallelism: 15
 workflows:
   version: 2
